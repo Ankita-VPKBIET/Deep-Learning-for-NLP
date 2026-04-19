@@ -1,0 +1,58 @@
+# ============================================
+# Assignment 5: ELMo Embeddings
+# ============================================
+
+# Step 1: Install Required Libraries (Run once)
+# Uncomment below line if not installed
+# !pip install tensorflow tensorflow-hub
+
+
+# Step 2: Import Libraries
+import tensorflow as tf
+import tensorflow_hub as hub
+
+
+# Step 3: Load Pretrained ELMo Model
+print("Loading ELMo model...")
+elmo = hub.load("https://tfhub.dev/google/elmo/3")
+print("Model loaded successfully!")
+
+
+# Step 4: Input Sentences
+sentences = [
+    "I will book a ticket",
+    "This is a good book"
+]
+
+
+# Step 5: Convert sentences to Tensor
+sentences_tensor = tf.constant(sentences)
+
+
+# Step 6: Generate Embeddings
+print("\nGenerating embeddings...")
+embeddings = elmo.signatures["default"](sentences_tensor)
+
+
+# Step 7: Show Available Outputs
+print("\nAvailable keys in embeddings:")
+print(embeddings.keys())
+
+
+# Step 8: Extract ELMo Embeddings
+word_embeddings = embeddings["elmo"]
+
+
+# Step 9: Check Shape
+print("\nShape of embeddings (sentences, words, vector size):")
+print(word_embeddings.shape)
+
+
+# Step 10: Display Embeddings for the word 'book'
+print("\nEmbedding of 'book' in Sentence 1:")
+print(word_embeddings[0][2])   # 'book' in sentence 1
+
+print("\nEmbedding of 'book' in Sentence 2:")
+print(word_embeddings[1][4])   # 'book' in sentence 2
+
+
