@@ -1,0 +1,86 @@
+# Assignment 2: Tokenization & Normalization
+# Aim: Perform tokenization and normalization on social media text
+
+# -------------------------------
+# Step 1: Install & Import Libraries
+# -------------------------------
+
+# Uncomment this line if NLTK is not installed
+# !pip install nltk
+
+import nltk
+import re
+from nltk.tokenize import word_tokenize
+from nltk.stem import PorterStemmer
+from nltk.corpus import stopwords
+
+# -------------------------------
+# Step 2: Download Required Data
+# -------------------------------
+
+nltk.download('punkt')
+nltk.download('stopwords')
+
+# -------------------------------
+# Step 3: Input Social Media Text
+# -------------------------------
+
+text = "OMG!!! I love this phone 😍 Visit https://example.com #awesome @user123"
+print("Original Text:\n", text)
+
+# -------------------------------
+# Step 4: Text Cleaning
+# -------------------------------
+
+# Remove URLs
+text = re.sub(r'http\S+', '', text)
+
+# Remove mentions (@username)
+text = re.sub(r'@\w+', '', text)
+
+# Remove hashtags (#word)
+text = re.sub(r'#\w+', '', text)
+
+# Remove emojis and special characters
+text = re.sub(r'[^\w\s]', '', text)
+
+print("\nCleaned Text:\n", text)
+
+# -------------------------------
+# Step 5: Convert to Lowercase
+# -------------------------------
+
+text = text.lower()
+print("\nLowercase Text:\n", text)
+
+# -------------------------------
+# Step 6: Tokenization
+# -------------------------------
+
+tokens = word_tokenize(text)
+print("\nTokens:\n", tokens)
+
+# -------------------------------
+# Step 7: Remove Stopwords
+# -------------------------------
+
+stop_words = set(stopwords.words('english'))
+filtered_tokens = [word for word in tokens if word not in stop_words]
+
+print("\nAfter Stopword Removal:\n", filtered_tokens)
+
+# -------------------------------
+# Step 8: Stemming (Normalization)
+# -------------------------------
+
+ps = PorterStemmer()
+stemmed_words = [ps.stem(word) for word in filtered_tokens]
+
+print("\nStemmed Words:\n", stemmed_words)
+
+# -------------------------------
+# Step 9: Final Output
+# -------------------------------
+
+final_text = " ".join(stemmed_words)
+print("\nFinal Processed Text:\n", final_text)
