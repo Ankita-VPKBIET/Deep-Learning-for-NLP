@@ -1,0 +1,74 @@
+# =========================================
+# Assignment 4: Text Classification using RNN
+# Name: Ankita Ashok Devkar
+# Roll No: 231314
+# Class: TY (IT)
+# =========================================
+
+# Import Libraries
+import numpy as np
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Embedding, SimpleRNN, Dense
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+
+# Step 1: Create Dataset
+texts = [
+    "I love this",
+    "This is good",
+    "I hate this",
+    "This is bad"
+]
+
+labels = [1, 1, 0, 0]   # 1 = Positive, 0 = Negative
+
+print("Dataset Loaded Successfully\n")
+
+# Step 2: Tokenization
+tokenizer = Tokenizer()
+tokenizer.fit_on_texts(texts)
+
+sequences = tokenizer.texts_to_sequences(texts)
+print("Sequences:", sequences)
+
+# Step 3: Padding
+X = pad_sequences(sequences, maxlen=3)
+y = np.array(labels)
+
+print("\nPadded Sequences:\n", X)
+
+# Step 4: Build RNN Model
+model = Sequential()
+model.add(Embedding(input_dim=100, output_dim=8))
+model.add(SimpleRNN(8))
+model.add(Dense(1, activation='sigmoid'))
+
+model.compile(
+    loss='binary_crossentropy',
+    optimizer='adam',
+    metrics=['accuracy']
+)
+
+print("\nModel Summary:")
+model.summary()
+
+# Step 5: Train Model
+print("\nTraining Model...\n")
+model.fit(X, y, epochs=10, verbose=1)
+
+# Step 6: Test Prediction
+test_sentence = ["I love this"]
+
+test_seq = tokenizer.texts_to_sequences(test_sentence)
+test_pad = pad_sequences(test_seq, maxlen=3)
+
+prediction = model.predict(test_pad)
+
+print("\nPrediction Value:", prediction)
+
+# Step 7: Final Output
+if prediction[0][0] > 0.5:
+    print("Sentiment: Positive 😊")
+else:
+    print("Sentiment: Negative 😞")
+
